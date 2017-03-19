@@ -35,7 +35,7 @@ environment:
       CHANNEL: nightly
 matrix:
   allow_failures:
-    CHANNEL: nightly
+    - CHANNEL: nightly
 
 # Install Rust and Cargo
 # (Based on from https://github.com/rust-lang/libc/blob/master/appveyor.yml)
