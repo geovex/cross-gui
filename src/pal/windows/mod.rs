@@ -31,12 +31,13 @@ impl<M> Gui for PalGui<M> {
     fn event_loop(&mut self) {
         let mut msg: MSG = unsafe { mem::uninitialized() };
         loop {
-            if 0 != unsafe { GetMessageW(&mut msg, null_mut(), 0u32, 0u32) } {
-                safe_api::translate_message(&msg);
-                safe_api::dispatch_message(&msg);
-            } else {
-                return
-            }
+            match safe_api::get_message(null_mut(), 0u32, 0u32) {
+                Ok(msg) => {
+                    safe_api::translate_message(&msg);
+                    safe_api::dispatch_message(&msg);
+                },
+                Err(_) => return
+            };
         }
     }
     fn send_msg(&mut self, _msg: M) {
