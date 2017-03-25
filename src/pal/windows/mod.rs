@@ -1,16 +1,15 @@
 use user32::{
     GetMessageW,
-    TranslateMessage,
     DispatchMessageW
 };
 use winapi::winuser::{
-    MSG,
-    NPWNDCLASSW};
+    MSG};
 use ::gui::Gui;
 use std::mem;
 use std::ptr::{null_mut};
 use std::marker::PhantomData;
 
+mod safe_api;
 mod window;
 use self::window::PalWindow;
 
@@ -33,8 +32,8 @@ impl<M> Gui for PalGui<M> {
         let mut msg: MSG = unsafe { mem::uninitialized() };
         loop {
             if 0 != unsafe { GetMessageW(&mut msg, null_mut(), 0u32, 0u32) } {
-                unsafe {TranslateMessage(&mut msg)};
-                unsafe {DispatchMessageW(&mut msg)};
+                safe_api::translate_message(&msg);
+                safe_api::dispatch_message(&msg);
             } else {
                 return
             }
