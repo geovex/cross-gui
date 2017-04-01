@@ -1,11 +1,4 @@
-use user32::{
-    GetMessageW,
-    DispatchMessageW
-};
-use winapi::winuser::{
-    MSG};
 use ::gui::Gui;
-use std::mem;
 use std::ptr::{null_mut};
 use std::marker::PhantomData;
 
@@ -29,7 +22,6 @@ impl<M> Gui for PalGui<M> {
         PalWindow::new()
     }
     fn event_loop(&mut self) {
-        let mut msg: MSG = unsafe { mem::uninitialized() };
         loop {
             match safe_api::get_message(null_mut(), 0u32, 0u32) {
                 Ok(msg) => {
