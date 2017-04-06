@@ -23,3 +23,19 @@ pub fn translate_message(msg: &MSG) -> BOOL {
 pub fn dispatch_message(msg: &MSG) -> LRESULT {
     unsafe {DispatchMessageW(msg)}
 }
+
+pub fn utf16z<S: Into<String>>(s: S) -> Vec<u16> {
+	let mut result: Vec<u16> = s.into().encode_utf16().collect();
+	result.push(0u16);
+	result
+}
+
+#[cfg(test)]
+mod test{
+	#[test]
+	fn utf16z() {
+		let test_result = super::utf16z("hi");
+		assert_eq!(test_result.len(), 3);
+		assert_eq!(test_result[2], 0u16);
+	}
+}
