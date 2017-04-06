@@ -54,4 +54,6 @@ build: off
 build_script:
   - cargo build
 test: off
+test_script:
+  - cargo test
 deploy: off
