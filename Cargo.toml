@@ -5,6 +5,7 @@ authors = ["Valakhanovich Heorhi <valahanovich@tut.by>"]
 
 [target.'cfg(windows)'.dependencies]
 winapi = "0.2"
+kernel32-sys = "0.2"
 user32-sys = "0.2"
 
 [target.'cfg(unix)'.dependencies]

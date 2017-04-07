@@ -1,3 +1,5 @@
+pub mod kernel;
+
 use winapi::winuser::{MSG};
 use winapi::minwindef::{BOOL, LRESULT, UINT};
 use winapi::windef::HWND;
