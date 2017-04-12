@@ -5,10 +5,11 @@ use std::ptr;
 use std::mem;
 use std::slice::from_raw_parts;
 
+/// basically `kernel32::GetLastError` wrapper
 pub fn get_last_error() -> DWORD {
     unsafe { GetLastError() }
 }
-
+/// converts [`get_last_error()`](fn.get_last_error.html) result to error message in current locale
 pub fn error_message(error_num: DWORD) -> String {
     let mut out_buf: *const u16 = ptr::null_mut();
     let bufLen = unsafe {
