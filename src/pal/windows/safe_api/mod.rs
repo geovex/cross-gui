@@ -7,6 +7,8 @@ use user32::{GetMessageW, DispatchMessageW, TranslateMessage};
 
 use std::mem;
 
+pub mod user;
+
 pub fn get_message(wnd: HWND, filter_min: UINT, filter_max: UINT) -> Result<MSG, ()> {
     let mut result: MSG;
     unsafe{ result = mem::uninitialized() };
