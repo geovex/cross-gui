@@ -8,5 +8,8 @@ extern crate user32;
 #[cfg(unix)]
 extern crate gtk;
 
+#[macro_use]
+extern crate lazy_static;
+
 pub mod pal;
 pub mod gui;

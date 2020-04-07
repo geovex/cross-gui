@@ -20,7 +20,7 @@ impl<M> Gui for PalGui<M> {
     }
     fn new_window(&mut self) -> gtk::Window {
         use gtk::WidgetExt;
-        use gtk::WindowExt;
+        use gtk::GtkWindowExt;
         let window = gtk::Window::new(gtk::WindowType::Toplevel);
         window.set_default_size(400,400);
         window.show_all();

@@ -3,10 +3,13 @@ name = "cross-gui"
 version = "0.1.0"
 authors = ["Valakhanovich Heorhi <valahanovich@tut.by>"]
 
+[dependencies]
+lazy_static = "0.2"
+
 [target.'cfg(windows)'.dependencies]
 winapi = "0.2"
 kernel32-sys = "0.2"
 user32-sys = "0.2"
 
 [target.'cfg(unix)'.dependencies]
-gtk = "0.1"
+gtk = "0.8"
