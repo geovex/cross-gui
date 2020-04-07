@@ -50,7 +50,6 @@ install:
   - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
   - rustc -Vv
   - cargo -V
-build: off
 build_script:
   - cargo build
 test: off
