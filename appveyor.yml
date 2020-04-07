@@ -32,13 +32,6 @@ environment:
       CHANNEL: nightly
     - TARGET: x86_64-pc-windows-msvc
       CHANNEL: nightly
-matrix:
-  allow_failures:
-    - CHANNEL: nightly
-
-# Cache .cargo dir
-cache:
-  - C:\Users\appveyor\.cargo\registry
 
 # Install Rust and Cargo
 # (Based on from https://github.com/rust-lang/libc/blob/master/appveyor.yml)
@@ -50,5 +43,4 @@ install:
   - cargo -V
 build: false
 build_script:
-  - cargo build
-  - cargo test
+  - cargo build --verbose
