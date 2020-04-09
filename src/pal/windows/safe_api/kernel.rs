@@ -11,8 +11,8 @@ pub fn get_last_error() -> DWORD {
 }
 /// converts [`get_last_error()`](fn.get_last_error.html) result to error message in current locale
 pub fn error_message(error_num: DWORD) -> String {
-    let mut out_buf: *const u16 = ptr::null_mut();
-    let bufLen = unsafe {
+    let out_buf: *const u16 = ptr::null_mut();
+    let buf_len = unsafe {
         FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
                        ptr::null(),
                        error_num,
@@ -21,7 +21,7 @@ pub fn error_message(error_num: DWORD) -> String {
                        0,
                        ptr::null_mut())
     };
-    let slice = unsafe { from_raw_parts(out_buf, bufLen as usize) };
+    let slice = unsafe { from_raw_parts(out_buf, buf_len as usize) };
     let result = String::from_utf16_lossy(slice);
     unsafe { LocalFree(mem::transmute(out_buf)) };
     result

@@ -3,6 +3,9 @@ use std::marker::PhantomData;
 use ::gui::Gui;
 use std::sync::Once;
 
+pub mod window;
+pub use self::window::*;
+
 static INIT: Once = Once::new();
 
 pub struct PalGui<M> {
@@ -10,7 +13,7 @@ pub struct PalGui<M> {
 }
 
 impl<M> Gui for PalGui<M> {
-    type Window = gtk::Window;
+    type Window = ::pal::Window;
     type Msg = M;
     fn new() -> PalGui<M> {
         INIT.call_once(|| gtk::init().unwrap());
@@ -18,13 +21,8 @@ impl<M> Gui for PalGui<M> {
             phantom: PhantomData
         }
     }
-    fn new_window(&mut self) -> gtk::Window {
-        use gtk::WidgetExt;
-        use gtk::GtkWindowExt;
-        let window = gtk::Window::new(gtk::WindowType::Toplevel);
-        window.set_default_size(400,400);
-        window.show_all();
-        window
+    fn new_window(&mut self) -> Self::Window {
+        ::pal::Window::new()
     }
     fn event_loop(&mut self) {
         gtk::main();
