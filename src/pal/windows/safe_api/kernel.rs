@@ -1,6 +1,6 @@
-use kernel32::{FormatMessageW, GetLastError, LocalFree};
-use winapi::minwindef::*;
-use winapi::winbase::*;
+use winapi::shared::minwindef::*;
+use winapi::um::errhandlingapi::{GetLastError};
+use winapi::um::winbase::{FormatMessageW, FORMAT_MESSAGE_ALLOCATE_BUFFER, FORMAT_MESSAGE_FROM_SYSTEM, LocalFree};
 use std::ptr;
 use std::mem;
 use std::slice::from_raw_parts;

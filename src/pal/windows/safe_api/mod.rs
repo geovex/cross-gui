@@ -1,15 +1,15 @@
 pub mod kernel;
 
-use winapi::winuser::{MSG};
-use winapi::minwindef::{BOOL, LRESULT, UINT};
-use winapi::windef::HWND;
-use user32::{GetMessageW, DispatchMessageW, TranslateMessage};
+use winapi::um::winuser::{MSG};
+use winapi::shared::minwindef::{BOOL, LRESULT, UINT};
+use winapi::shared::windef::HWND;
+use winapi::um::winuser::{GetMessageW, DispatchMessageW, TranslateMessage};
 
-use std::mem;
+use std::mem::MaybeUninit;
 
 pub fn get_message(wnd: HWND, filter_min: UINT, filter_max: UINT) -> Result<MSG, ()> {
     let mut result: MSG;
-    unsafe{ result = mem::uninitialized() };
+    unsafe{ result = MaybeUninit::zeroed().assume_init() };
     let status = unsafe { GetMessageW(&mut result, wnd, filter_min, filter_max) };
     if status != 0{
         Ok(result)

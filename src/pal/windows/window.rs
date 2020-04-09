@@ -1,6 +1,6 @@
-use user32::CreateWindowExW;
-use winapi::winuser::{WS_OVERLAPPEDWINDOW, WS_VISIBLE};
-use winapi::windef::HWND;
+use winapi::um::winuser::CreateWindowExW;
+use winapi::um::winuser::{WS_OVERLAPPEDWINDOW, WS_VISIBLE};
+use winapi::shared::windef::HWND;
 use std::ffi::OsStr;
 use std::os::windows::ffi::OsStrExt;
 use std::iter::once;
