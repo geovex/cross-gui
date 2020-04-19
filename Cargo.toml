@@ -5,6 +5,7 @@ authors = ["Valakhanovich Heorhi <valahanovich@tut.by>"]
 
 [target.'cfg(windows)'.dependencies]
 winapi = {version = "0.3", features = ["errhandlingapi", "winbase", "windef", "winuser",]}
+wchar = "0.6"
 
 [target.'cfg(unix)'.dependencies]
 gtk = "0.8"

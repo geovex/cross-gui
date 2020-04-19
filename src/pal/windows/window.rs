@@ -1,11 +1,10 @@
-use std::ffi::OsStr;
-use std::iter::once;
-use std::os::windows::ffi::OsStrExt;
 use std::ptr::null_mut;
 use winapi::shared::minwindef::TRUE;
 use winapi::shared::windef::HWND;
 use winapi::um::winuser::{CreateWindowExW, MoveWindow, ShowWindow};
 use winapi::um::winuser::{SW_HIDE, SW_SHOW, WS_OVERLAPPEDWINDOW, WS_VISIBLE};
+
+use super::safe_api;
 
 pub struct PalWindow {
     handle: HWND,
@@ -13,11 +12,10 @@ pub struct PalWindow {
 
 impl PalWindow {
     pub fn new() -> PalWindow {
-        let class_name: Vec<u16> = OsStr::new("BUTTON").encode_wide().chain(once(0)).collect();
         let hwnd = unsafe {
             CreateWindowExW(
                 0u32,
-                class_name.as_ptr(),
+                safe_api::WNDCLASS_NAME,
                 null_mut(),
                 WS_VISIBLE | WS_OVERLAPPEDWINDOW,
                 0,

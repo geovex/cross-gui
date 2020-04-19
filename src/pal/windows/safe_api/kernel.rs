@@ -1,9 +1,13 @@
 use winapi::shared::minwindef::*;
 use winapi::um::errhandlingapi::{GetLastError};
-use winapi::um::winbase::{FormatMessageW, FORMAT_MESSAGE_ALLOCATE_BUFFER, FORMAT_MESSAGE_FROM_SYSTEM, LocalFree};
+use winapi::um::winbase::{FormatMessageW, LocalFree, FORMAT_MESSAGE_FROM_SYSTEM, FORMAT_MESSAGE_ALLOCATE_BUFFER};
+use winapi::um::libloaderapi::GetModuleHandleW;
+use winapi::shared::minwindef::HINSTANCE;
 use std::ptr;
 use std::mem;
 use std::slice::from_raw_parts;
+use std::ffi::OsStr;
+use std::os::windows::ffi::OsStrExt;
 
 /// basically `kernel32::GetLastError` wrapper
 pub fn get_last_error() -> DWORD {
@@ -25,6 +29,16 @@ pub fn error_message(error_num: DWORD) -> String {
     let result = String::from_utf16_lossy(slice);
     unsafe { LocalFree(mem::transmute(out_buf)) };
     result
+}
+
+pub fn GetModuleHandle(name: Option<&str>) -> HINSTANCE
+{
+    if let Some(name) = name {
+        let name: Vec<u16> = OsStr::new(name).encode_wide().collect();
+        unsafe { GetModuleHandleW(name.as_ptr()) }
+    } else { 
+        unsafe { GetModuleHandleW(ptr::null_mut()) }
+    }
 }
 
 #[cfg(test)]

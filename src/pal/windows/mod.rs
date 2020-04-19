@@ -14,6 +14,7 @@ impl<M> Gui for PalGui<M> {
     type Window = PalWindow;
     type Msg = M;
     fn new() -> PalGui<M> {
+        safe_api::declare_wndclass();
         PalGui {
             phantom: PhantomData
         }

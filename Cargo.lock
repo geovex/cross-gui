@@ -68,6 +68,7 @@ name = "cross-gui"
 version = "0.1.0"
 dependencies = [
  "gtk",
+ "wchar",
  "winapi",
 ]
 
@@ -418,6 +419,28 @@ name = "unicode-xid"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "826e7639553986605ec5979c7dd957c7895e93eabed50ab2ffa7f6128a75097c"
+
+[[package]]
+name = "wchar"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "584ff5579d5b88458b6b6e468aef1754053fa7abcf4ad6a1e864ac6a9a366fe6"
+dependencies = [
+ "proc-macro-hack",
+ "wchar-impl",
+]
+
+[[package]]
+name = "wchar-impl"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f135922b9303f899bfa446fce1eb149f43462f1e9ac7f50e24ea6b913416dd84"
+dependencies = [
+ "proc-macro-hack",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "winapi"
