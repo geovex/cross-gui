@@ -4,6 +4,7 @@ use std::marker::PhantomData;
 
 mod safe_api;
 mod window;
+mod wndclass;
 use self::window::PalWindow;
 
 pub struct PalGui<M> {
@@ -14,7 +15,7 @@ impl<M> Gui for PalGui<M> {
     type Window = PalWindow;
     type Msg = M;
     fn new() -> PalGui<M> {
-        safe_api::declare_wndclass();
+        wndclass::declare_wndclass();
         PalGui {
             phantom: PhantomData
         }

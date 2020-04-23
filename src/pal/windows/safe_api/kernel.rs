@@ -10,10 +10,12 @@ use std::ffi::OsStr;
 use std::os::windows::ffi::OsStrExt;
 
 /// basically `kernel32::GetLastError` wrapper
+#[allow(dead_code)]
 pub fn get_last_error() -> DWORD {
     unsafe { GetLastError() }
 }
 /// converts [`get_last_error()`](fn.get_last_error.html) result to error message in current locale
+#[allow(dead_code)]
 pub fn error_message(error_num: DWORD) -> String {
     let out_buf: *const u16 = ptr::null_mut();
     let buf_len = unsafe {
@@ -31,7 +33,7 @@ pub fn error_message(error_num: DWORD) -> String {
     result
 }
 
-pub fn GetModuleHandle(name: Option<&str>) -> HINSTANCE
+pub fn get_module_handle(name: Option<&str>) -> HINSTANCE
 {
     if let Some(name) = name {
         let name: Vec<u16> = OsStr::new(name).encode_wide().collect();
