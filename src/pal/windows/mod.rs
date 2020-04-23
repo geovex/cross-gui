@@ -1,4 +1,3 @@
-use ::gui::Gui;
 use std::ptr::{null_mut};
 use std::marker::PhantomData;
 
@@ -6,22 +5,20 @@ mod safe_api;
 mod window;
 mod wndclass;
 use self::window::PalWindow;
+use crate::gui;
 
-pub struct PalGui<M> {
-    phantom: PhantomData<M>
+pub struct Win32Gui;
+
+impl Win32Gui {
+    pub fn new() -> Win32Gui {
+        wndclass::declare_wndclass();
+        Win32Gui
+    }
 }
 
-impl<M> Gui for PalGui<M> {
-    type Window = PalWindow;
-    type Msg = M;
-    fn new() -> PalGui<M> {
-        wndclass::declare_wndclass();
-        PalGui {
-            phantom: PhantomData
-        }
-    }
-    fn new_window(&mut self) -> PalWindow {
-        PalWindow::new()
+impl gui::Gui for Win32Gui {
+    fn new_window(&mut self) -> Box<dyn gui::Window> {
+        Box::new(PalWindow::new())
     }
     fn event_loop(&mut self) {
         loop {
@@ -33,8 +30,5 @@ impl<M> Gui for PalGui<M> {
                 Err(_) => return
             };
         }
-    }
-    fn send_msg(&mut self, _msg: M) {
-        unimplemented!()
     }
 }

@@ -3,15 +3,17 @@ use ::pal;
 pub mod window;
 pub use self::window::*;
 
-pub fn default_gui<Msg:Send>() -> pal::PalGui<Msg> {
-    pal::PalGui::new()
+#[cfg(target_os = "linux")]
+pub fn default_gui() -> Box<dyn Gui> {
+    Box::new(pal::GtKGui::new())
+}
+#[cfg(target_os = "windows")]
+pub fn default_gui() -> Box<dyn Gui> {
+    Box::new(pal::Win32Gui::new())
 }
 
+
 pub trait Gui {
-    type Window;
-    type Msg;
-    fn new() -> Self;
-    fn new_window(&mut self) -> Self::Window;
+    fn new_window(&mut self) -> Box<dyn Window>;
     fn event_loop(&mut self);
-    fn send_msg(&mut self, msg: Self::Msg);
 }
