@@ -9,3 +9,4 @@ wchar = "0.6"
 
 [target.'cfg(unix)'.dependencies]
 gtk = "0.8"
+glib = "0.9"

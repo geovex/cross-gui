@@ -4,6 +4,8 @@ use std::sync::Once;
 
 pub mod window;
 pub use self::window::*;
+pub mod button;
+pub use self::button::*;
 
 static INIT: Once = Once::new();
 
@@ -18,7 +20,10 @@ impl GtKGui{
 
 impl gui::Gui for GtKGui {
     fn new_window(&mut self) -> Box<dyn gui::Window> {
-        Box::new(::pal::Window::new())
+        Box::new(Window::new())
+    }
+    fn new_button(&mut self) -> Box<dyn gui::Button> {
+        Box::new(Button::new())
     }
     fn event_loop(&mut self) {
         gtk::main();

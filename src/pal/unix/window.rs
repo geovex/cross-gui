@@ -1,9 +1,10 @@
-use gtk::GtkWindowExt as _;
-use gtk::WidgetExt as _;
-use gtk::Window as GtkWindow;
-use std::{cell::RefCell, rc::Rc};
+use gtk::{GtkWindowExt, WidgetExt, ContainerExt, FixedExt};
+use std::{cell::RefCell, rc::Rc, any::Any};
+use crate::gui;
+#[derive(Clone)]
 pub struct Window {
-    inner: GtkWindow,
+    window: gtk::Window,
+    fixed: gtk::Fixed,
     user_data: Rc<RefCell<UserData>>,
 }
 
@@ -21,7 +22,7 @@ impl UserData {
 
 impl Window {
     pub fn new() -> Window {
-        let gtk_window = GtkWindow::new(gtk::WindowType::Toplevel);
+        let gtk_window = gtk::Window::new(gtk::WindowType::Toplevel);
         let user_data = Rc::new(RefCell::new(UserData::new()));
         let user_data_clone = user_data.clone();
         gtk_window.connect_destroy(move |_| {
@@ -29,30 +30,48 @@ impl Window {
                 gtk::main_quit()
             }
         });
-        gtk_window.show();
+        let fixed_layout = gtk::Fixed::new();
+        gtk_window.add(&fixed_layout);
+        gtk_window.show_all();
         Window {
             user_data,
-            inner: gtk_window,
+            window: gtk_window,
+            fixed: fixed_layout
         }
     }
 }
 
-impl ::gui::Window for Window {
+impl gui::Window for Window {
     fn set_title(&mut self, title: &str) {
-        self.inner.set_title(title);
-    }
-    fn set_hidden(&mut self, hidden: bool) {
-        if hidden {
-            self.inner.show();
-        } else {
-            self.inner.hide();
-        }
-    }
-    fn move_(&mut self, x: isize, y: isize, w: isize, h: isize) {
-        self.inner.move_(x as i32, y as i32);
-        self.inner.resize(w as i32, h as i32);
+        self.window.set_title(title);
     }
     fn set_exit_on_close(&mut self, exit: bool) {
         self.user_data.borrow_mut().exit_on_close = exit;
+    }
+    fn add_widget(&mut self, widget: Box<dyn gui::Widget>) {
+        let native_any = widget.get_native();
+        //dbg!(native_any.downcast::<gtk::Widget>());
+        let native: &gtk::Widget = native_any.as_ref().downcast_ref().unwrap();
+        self.fixed.put(native, 0, 0);
+    }
+}
+
+impl gui::Widget for Window{
+    fn upcast(&self) -> Box<dyn gui::Widget> {
+        Box::new(self.clone())
+    }
+    fn get_native(&self) -> Box<dyn Any> {
+        Box::new(self.window.clone())
+    }
+    fn set_hidden(&mut self, hidden: bool) {
+        if hidden {
+            self.window.show();
+        } else {
+            self.window.hide();
+        }
+    }
+    fn move_(&mut self, x: isize, y: isize, w: isize, h: isize) {
+        self.window.move_(x as i32, y as i32);
+        self.window.resize(w as i32, h as i32);
     }
 }

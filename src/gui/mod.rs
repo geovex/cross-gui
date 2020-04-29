@@ -2,6 +2,10 @@ use ::pal;
 
 pub mod window;
 pub use self::window::*;
+pub mod widget;
+pub use self::widget::*;
+pub mod button;
+pub use self::button::*;
 
 #[cfg(target_os = "linux")]
 pub fn default_gui() -> Box<dyn Gui> {
@@ -15,5 +19,6 @@ pub fn default_gui() -> Box<dyn Gui> {
 
 pub trait Gui {
     fn new_window(&mut self) -> Box<dyn Window>;
+    fn new_button(&mut self) -> Box<dyn Button>;
     fn event_loop(&mut self);
 }

@@ -1,10 +1,11 @@
-use std::ptr::{null_mut};
-use std::marker::PhantomData;
+use std::ptr::null_mut;
 
 mod safe_api;
 mod window;
+mod button;
 mod wndclass;
 use self::window::PalWindow;
+use self::button::Button;
 use crate::gui;
 
 pub struct Win32Gui;
@@ -19,6 +20,9 @@ impl Win32Gui {
 impl gui::Gui for Win32Gui {
     fn new_window(&mut self) -> Box<dyn gui::Window> {
         Box::new(PalWindow::new())
+    }
+    fn new_button(&mut self) -> Box<dyn gui::Button> {
+        Box::new(Button::new())
     }
     fn event_loop(&mut self) {
         loop {

@@ -34,7 +34,10 @@ fn put_user_data(hwnd: HWND) {
 fn drop_user_data(hwnd: HWND) {
     let ptr: *mut UserData = unsafe { mem::transmute(GetWindowLongPtrW(hwnd, GWLP_USERDATA)) };
     if !ptr.is_null() {
-        unsafe { Box::from_raw(ptr) };
+        unsafe {
+            Box::from_raw(ptr);
+            SetWindowLongPtrW(hwnd, GWLP_USERDATA, 0);
+        };
     };
 }
 
@@ -43,10 +46,12 @@ pub fn safe_wndproc(hwnd: HWND, u_msg: UINT, _w_param: WPARAM, _l_param: LPARAM)
     match u_msg {
         WM_CREATE => put_user_data(hwnd),
         WM_DESTROY => drop_user_data(hwnd),
-        WM_CLOSE => if userdata.unwrap().exit_on_close {
-            user32::post_quit_message(0);
+        WM_CLOSE => {
+            if userdata.unwrap().exit_on_close {
+                user32::post_quit_message(0);
+            }
         }
-        _ => ()
+        _ => (),
     }
 }
 
@@ -59,6 +64,7 @@ unsafe extern "system" fn wndproc(
     safe_wndproc(hwnd, u_msg, w_param, l_param);
     DefWindowProcW(hwnd, u_msg, w_param, l_param)
 }
+
 
 static REGISTER_CLASS_ONCE: Once = Once::new();
 pub const WNDCLASS_NAME: *const u16 = wchar::wch_c!("cross_gui_wndclass").as_ptr();
@@ -80,4 +86,62 @@ pub fn declare_wndclass() {
         let result = unsafe { RegisterClassW(&window_class) };
         dbg!(result);
     });
+}
+
+struct SubclassUserData<C, F>
+where
+    F: Fn(&mut C, HWND, UINT, WPARAM, LPARAM),
+{
+    func: F,
+    default_proc: WNDPROC,
+    context: C,
+}
+
+unsafe extern "system" fn subclass_wnd_proc<C, F>(
+    hwnd: HWND,
+    u_msg: UINT,
+    w_param: WPARAM,
+    l_param: LPARAM,
+) -> LRESULT
+where
+    F: Fn(&mut C, HWND, UINT, WPARAM, LPARAM),
+{
+    let data: *mut SubclassUserData<C, F> =
+        mem::transmute(GetWindowLongPtrW(hwnd, GWLP_USERDATA));
+    if !data.is_null() {
+        let context: &mut SubclassUserData<C, F> = mem::transmute(data);
+        (context.func)(&mut context.context, hwnd, u_msg, w_param, l_param);
+        let result =
+            CallWindowProcW(context.default_proc, hwnd, u_msg, w_param, l_param);
+        if u_msg == WM_DESTROY {
+            SetWindowLongPtrW(hwnd, GWLP_WNDPROC, mem::transmute(context.default_proc));
+            SetWindowLongPtrW(hwnd, GWLP_USERDATA, 0);
+            Box::from_raw(data);
+        }
+        result
+    } else {
+        0
+    }
+}
+
+
+pub fn subclass_window<C, F>(window: HWND, func: F, context: C)
+where
+    F: Fn(&mut C, HWND, UINT, WPARAM, LPARAM),
+{
+    let default_proc = unsafe { mem::transmute(GetWindowLongPtrW(window, GWLP_WNDPROC)) };
+    let context = Box::new(SubclassUserData {
+        func,
+        default_proc,
+        context,
+    });
+    let context_ptr = Box::into_raw(context);
+    unsafe {
+        SetWindowLongPtrW(window, GWLP_USERDATA, mem::transmute(context_ptr));
+        SetWindowLongPtrW(
+            window,
+            GWLP_WNDPROC,
+            subclass_wnd_proc::<C, F> as isize
+        );
+    };
 }

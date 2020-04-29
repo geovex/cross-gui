@@ -5,6 +5,8 @@ extern crate wchar;
 
 #[cfg(unix)]
 extern crate gtk;
+#[cfg(unix)]
+extern crate glib;
 
 pub mod pal;
 pub mod gui;
