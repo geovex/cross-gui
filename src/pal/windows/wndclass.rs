@@ -141,7 +141,7 @@ where
         SetWindowLongPtrW(
             window,
             GWLP_WNDPROC,
-            subclass_wnd_proc::<C, F> as isize
+            mem::transmute(subclass_wnd_proc::<C, F> as isize)
         );
     };
 }
