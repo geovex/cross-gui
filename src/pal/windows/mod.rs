@@ -36,3 +36,5 @@ impl gui::Gui for Win32Gui {
         }
     }
 }
+
+pub type NativeWiddget = winapi::shared::windef::HWND;

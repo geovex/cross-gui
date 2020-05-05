@@ -29,3 +29,5 @@ impl gui::Gui for GtKGui {
         gtk::main();
     }
 }
+
+pub type NativeWiddget = gtk::Widget;
