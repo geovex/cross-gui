@@ -3,9 +3,11 @@ use std::ptr::null_mut;
 mod safe_api;
 mod window;
 mod button;
+mod label;
 mod wndclass;
 use self::window::PalWindow;
 use self::button::Button;
+use self::label::Label;
 use crate::gui;
 
 pub struct Win32Gui;
@@ -23,6 +25,9 @@ impl gui::Gui for Win32Gui {
     }
     fn new_button(&mut self) -> Box<dyn gui::Button> {
         Box::new(Button::new())
+    }
+    fn new_label(&mut self) -> Box<dyn gui::Label> {
+        Box::new(Label::new())
     }
     fn event_loop(&mut self) {
         loop {

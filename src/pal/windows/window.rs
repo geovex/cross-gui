@@ -1,11 +1,10 @@
 use std::ptr::null_mut;
 use std::any::Any;
-use winapi::shared::minwindef::TRUE;
-use winapi::shared::windef::HWND;
+use winapi::shared::windef::*;
 use winapi::um::winuser::*;
 use crate::gui;
 
-use super::safe_api::user32::set_window_text;
+use super::safe_api;
 use super::wndclass;
 
 #[derive(Clone)]
@@ -46,14 +45,14 @@ impl gui::Widget for PalWindow {
         unsafe { ShowWindow(self.handle, if hidden { SW_HIDE } else { SW_SHOW }) };
     }
     fn move_(&mut self, x: isize, y: isize, w: isize, h: isize) {
-        unsafe { MoveWindow(self.handle, x as i32, y as i32, w as i32, h as i32, TRUE) };
+        safe_api::user32::set_window_pos(self.handle, HWND_TOP, x as i32, y as i32, w as i32, h as i32, SWP_NOZORDER);
     }
 
 }
 
 impl gui::Window for PalWindow {
     fn set_title(&mut self, title: &str) {
-        set_window_text(self.handle, title);
+        safe_api::user32::set_window_text(self.handle, title);
     }
     fn set_exit_on_close(&mut self, exit: bool) {
         let user_data = wndclass::get_user_data(&self.handle);

@@ -13,6 +13,10 @@ fn main() {
     let mut button = g.new_button();
     button.set_title("button");
     essential_window.add_widget(button.upcast());
-    button.move_(10, 10, 100, 40);
+    button.move_(110, 10, 80, 40);
+    let mut label = g.new_label();
+    essential_window.add_widget(label.upcast());
+    label.set_title("label");
+    label.move_(0, 0, 90, 40);
     g.event_loop();
 }

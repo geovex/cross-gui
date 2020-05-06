@@ -6,6 +6,8 @@ pub mod window;
 pub use self::window::*;
 pub mod button;
 pub use self::button::*;
+pub mod label;
+pub use self::label::*;
 
 static INIT: Once = Once::new();
 
@@ -24,6 +26,9 @@ impl gui::Gui for GtKGui {
     }
     fn new_button(&mut self) -> Box<dyn gui::Button> {
         Box::new(Button::new())
+    }
+    fn new_label(&mut self) -> Box<dyn gui::Label> {
+        Box::new(Label::new())
     }
     fn event_loop(&mut self) {
         gtk::main();
