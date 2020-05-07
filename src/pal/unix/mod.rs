@@ -11,6 +11,7 @@ pub use self::label::*;
 
 static INIT: Once = Once::new();
 
+#[derive(Clone)]
 pub struct GtKGui;
 
 impl GtKGui{
@@ -21,6 +22,9 @@ impl GtKGui{
 }
 
 impl gui::Gui for GtKGui {
+    fn get_cloned(&mut self) -> Box<dyn gui::Gui> {
+        Box::new(self.clone())
+    }
     fn new_window(&mut self) -> Box<dyn gui::Window> {
         Box::new(Window::new())
     }
@@ -29,6 +33,9 @@ impl gui::Gui for GtKGui {
     }
     fn new_label(&mut self) -> Box<dyn gui::Label> {
         Box::new(Label::new())
+    }
+    fn post_quit_message(&mut self) {
+        gtk::main_quit();
     }
     fn event_loop(&mut self) {
         gtk::main();

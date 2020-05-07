@@ -20,8 +20,10 @@ pub fn default_gui() -> Box<dyn Gui> {
 
 
 pub trait Gui {
+    fn get_cloned(&mut self) -> Box<dyn Gui>;
     fn new_window(&mut self) -> Box<dyn Window>;
     fn new_button(&mut self) -> Box<dyn Button>;
     fn new_label(&mut self) -> Box<dyn Label>;
+    fn post_quit_message(&mut self);
     fn event_loop(&mut self);
 }

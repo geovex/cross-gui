@@ -41,7 +41,7 @@ fn drop_user_data(hwnd: HWND) {
     };
 }
 
-pub fn safe_wndproc(hwnd: HWND, u_msg: UINT, _w_param: WPARAM, _l_param: LPARAM) {
+pub fn safe_wndproc(hwnd: HWND, u_msg: UINT, w_param: WPARAM, l_param: LPARAM) {
     let userdata = get_user_data(&hwnd);
     match u_msg {
         WM_CREATE => put_user_data(hwnd),
@@ -49,6 +49,11 @@ pub fn safe_wndproc(hwnd: HWND, u_msg: UINT, _w_param: WPARAM, _l_param: LPARAM)
         WM_CLOSE => {
             if userdata.unwrap().exit_on_close {
                 user32::post_quit_message(0);
+            }
+        }
+        WM_COMMAND => {
+            unsafe {
+                PostMessageW(mem::transmute(l_param), u_msg, w_param, l_param);
             }
         }
         _ => (),

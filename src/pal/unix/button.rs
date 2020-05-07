@@ -2,7 +2,7 @@ use gtk;
 use gtk::{ButtonExt, FixedExt, WidgetExt};
 use crate::gui;
 use glib::object::Cast;
-use std::any::Any;
+use std::{cell::RefCell, any::Any};
 
 #[derive(Clone)]
 pub struct Button {
@@ -20,6 +20,13 @@ impl Button {
 impl gui::Button for Button {
     fn set_title(&mut self, title: &str) {
         self.inner.set_label(title);
+    }
+    fn set_on_clicked(&mut self, on_pressed: Box<dyn FnMut()>) {
+        let rcell = RefCell::new(on_pressed);
+        self.inner.connect_clicked(move |_| {
+            let borrow = &mut *rcell.borrow_mut();
+            borrow();
+        });
     }
 }
 

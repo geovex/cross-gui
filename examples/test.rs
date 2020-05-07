@@ -14,6 +14,8 @@ fn main() {
     button.set_title("button");
     essential_window.add_widget(button.upcast());
     button.move_(110, 10, 80, 40);
+    let mut g_clone = g.get_cloned();
+    button.set_on_clicked(Box::new(move || g_clone.post_quit_message()));
     let mut label = g.new_label();
     essential_window.add_widget(label.upcast());
     label.set_title("label");

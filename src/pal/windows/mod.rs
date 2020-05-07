@@ -20,6 +20,9 @@ impl Win32Gui {
 }
 
 impl gui::Gui for Win32Gui {
+    fn get_cloned(&mut self) -> Box<dyn gui::Gui> {
+        Box::new(Win32Gui)
+    }
     fn new_window(&mut self) -> Box<dyn gui::Window> {
         Box::new(PalWindow::new())
     }
@@ -28,6 +31,9 @@ impl gui::Gui for Win32Gui {
     }
     fn new_label(&mut self) -> Box<dyn gui::Label> {
         Box::new(Label::new())
+    }
+    fn post_quit_message(&mut self) {
+        safe_api::user32::post_quit_message(0);
     }
     fn event_loop(&mut self) {
         loop {
