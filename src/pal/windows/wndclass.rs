@@ -83,8 +83,7 @@ pub fn declare_wndclass() {
             lpszMenuName: null_mut(),
             lpszClassName: WNDCLASS_NAME,
         };
-        let result = unsafe { RegisterClassW(&window_class) };
-        dbg!(result);
+        unsafe { RegisterClassW(&window_class) };
     });
 }
 
