@@ -1,8 +1,10 @@
 use std::ptr::null_mut;
 use std::any::Any;
 use winapi::shared::windef::*;
+use winapi::shared::minwindef::*;
 use winapi::um::winuser::*;
 use crate::gui;
+
 
 use super::safe_api;
 use super::wndclass;
@@ -45,6 +47,16 @@ impl gui::Widget for PalWindow {
         unsafe { ShowWindow(self.handle, if hidden { SW_HIDE } else { SW_SHOW }) };
     }
     fn move_(&mut self, x: isize, y: isize, w: isize, h: isize) {
+        let (x, y, w, h) = unsafe{ 
+            let mut adj_rect = RECT {
+                left: x as i32,
+                top: y as i32,
+                right: (x + w) as i32,
+                bottom: (y + h) as i32
+            };
+            AdjustWindowRect(&mut adj_rect, WS_VISIBLE | WS_OVERLAPPEDWINDOW, FALSE);
+            (adj_rect.left, adj_rect.top, adj_rect.right - adj_rect.left, adj_rect.bottom - adj_rect.top)
+        };
         safe_api::user32::set_window_pos(self.handle, HWND_TOP, x as i32, y as i32, w as i32, h as i32, SWP_NOZORDER);
     }
 
