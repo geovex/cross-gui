@@ -10,7 +10,6 @@ pub struct Label {
     box_: gtk::Box,
     inner: gtk::Label
 }
-
 impl Label {
     pub fn new() -> Label {
         let box_ = gtk::Box::new(Orientation::Horizontal, 0);
@@ -53,6 +52,7 @@ impl Widget for Label {
     
 }
 
+#[cross_gui_derive::auto_clone]
 impl gui::Label for Label {
     fn set_title(&mut self, title: &str) {
         self.inner.set_text(title);

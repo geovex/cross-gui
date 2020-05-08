@@ -18,9 +18,8 @@ pub fn default_gui() -> Box<dyn Gui> {
     Box::new(pal::Win32Gui::new())
 }
 
-
+#[cross_gui_derive::gui_trait]
 pub trait Gui {
-    fn get_cloned(&mut self) -> Box<dyn Gui>;
     fn new_window(&mut self) -> Box<dyn Window>;
     fn new_button(&mut self) -> Box<dyn Button>;
     fn new_label(&mut self) -> Box<dyn Label>;

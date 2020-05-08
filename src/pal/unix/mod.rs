@@ -14,6 +14,7 @@ static INIT: Once = Once::new();
 #[derive(Clone)]
 pub struct GtKGui;
 
+
 impl GtKGui{
     pub fn new() -> GtKGui {
         INIT.call_once(|| gtk::init().unwrap());
@@ -21,10 +22,8 @@ impl GtKGui{
     }
 }
 
+#[cross_gui_derive::auto_clone]
 impl gui::Gui for GtKGui {
-    fn get_cloned(&mut self) -> Box<dyn gui::Gui> {
-        Box::new(self.clone())
-    }
     fn new_window(&mut self) -> Box<dyn gui::Window> {
         Box::new(Window::new())
     }

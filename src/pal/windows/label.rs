@@ -32,6 +32,7 @@ impl Label{
     }
 }
 
+#[cross_gui_derive::auto_clone]
 impl gui::Label for Label{
     fn set_title(&mut self, title: &str) {
         safe_api::user32::set_window_text(self.handle, title);

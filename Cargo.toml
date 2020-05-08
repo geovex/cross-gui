@@ -3,6 +3,13 @@ name = "cross-gui"
 version = "0.1.0"
 authors = ["Valakhanovich Heorhi <valahanovich@tut.by>"]
 
+[workspace]
+members = [
+    "cross-gui-derive",
+]
+[dependencies]
+cross-gui-derive = {path = "cross-gui-derive"}
+
 [target.'cfg(windows)'.dependencies]
 winapi = {version = "0.3", features = ["errhandlingapi", "winbase", "windef", "winuser",]}
 wchar = "0.6"

@@ -1,3 +1,5 @@
+extern crate cross_gui_derive;
+
 #[cfg(windows)]
 extern crate winapi;
 #[cfg(windows)]

@@ -16,7 +16,7 @@ impl Button {
         Button{ inner }
     }
 }
-
+#[cross_gui_derive::auto_clone]
 impl gui::Button for Button {
     fn set_title(&mut self, title: &str) {
         self.inner.set_label(title);

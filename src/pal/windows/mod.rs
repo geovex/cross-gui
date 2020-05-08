@@ -10,6 +10,7 @@ use self::button::Button;
 use self::label::Label;
 use crate::gui;
 
+#[derive(Clone)]
 pub struct Win32Gui;
 
 impl Win32Gui {
@@ -20,7 +21,7 @@ impl Win32Gui {
 }
 
 impl gui::Gui for Win32Gui {
-    fn get_cloned(&mut self) -> Box<dyn gui::Gui> {
+    fn cloned(&mut self) -> Box<dyn gui::Gui> {
         Box::new(Win32Gui)
     }
     fn new_window(&mut self) -> Box<dyn gui::Window> {

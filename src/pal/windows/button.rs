@@ -61,6 +61,7 @@ impl gui::Widget for Button {
     }
 }
 
+#[cross_gui_derive::auto_clone]
 impl gui::Button for Button {
     fn set_title(&mut self, title: &str) { 
         safe_api::user32::set_window_text(self.handle, title);
