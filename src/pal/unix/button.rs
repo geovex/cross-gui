@@ -44,15 +44,7 @@ impl gui::Widget for Button {
             self.inner.hide();
         }
     }
-    fn move_(&mut self, x: isize, y: isize, w: isize, h: isize) {
-        //check if parent is fixed
-        self.inner.set_size_request(w as i32, h as i32);
-        let parent = self.inner.get_parent();
-        if let Some(parent) = parent {
-            let parent = parent.dynamic_cast::<gtk::Fixed>();
-            if let Ok(fixed_layout) = parent {
-                fixed_layout.move_(&self.inner, x as i32, y as i32);
-            }
-        }
+    fn resize(&mut self, width: isize, height: isize) {
+        self.inner.set_size_request(width as i32, height as i32);
     }
 }

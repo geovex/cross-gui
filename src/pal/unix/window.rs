@@ -54,6 +54,16 @@ impl gui::Window for Window {
         let native: &gtk::Widget = native_any.as_ref().downcast_ref().unwrap();
         self.fixed.put(native, 0, 0);
     }
+    fn move_(&mut self, x: isize, y: isize, w: isize, h: isize) {
+        self.window.move_(x as i32, y as i32);
+        self.window.resize(w as i32, h as i32);
+    }
+    fn move_child(&mut self, widget: &dyn gui::Widget, x: isize, y: isize, w: isize, h: isize) {
+        let native_any = widget.get_native();
+        let native: &gtk::Widget = native_any.as_ref().downcast_ref().unwrap();
+        native.set_size_request(w as i32, h as i32);
+        self.fixed.move_(native, x as i32, y as i32);
+    }
 }
 
 impl gui::Widget for Window{
@@ -70,8 +80,7 @@ impl gui::Widget for Window{
             self.window.hide();
         }
     }
-    fn move_(&mut self, x: isize, y: isize, w: isize, h: isize) {
-        self.window.move_(x as i32, y as i32);
-        self.window.resize(w as i32, h as i32);
+    fn resize(&mut self, width: isize, height: isize) {
+        self.window.resize(width as i32, height as i32);
     }
 }

@@ -9,6 +9,7 @@ use super::safe_api;
 use std::rc::Rc;
 use std::ptr::null_mut;
 use std::cell::RefCell;
+use std::mem::MaybeUninit;
 
 #[derive(Default)]
 struct ButtonContext{
@@ -55,9 +56,25 @@ impl gui::Widget for Button {
     fn set_hidden(&mut self, hidden: bool) {
         safe_api::user32::show_window(self.handle, hidden);
     }
-    fn move_(&mut self, x: isize, y: isize, w: isize, h: isize) { 
-        safe_api::user32::move_window(self.handle, x as i32, y as i32, w as i32, h as i32, true);
-
+    fn resize(&mut self, width: isize, height: isize) {
+        unsafe {
+            let mut old_rect = MaybeUninit::zeroed().assume_init();
+            GetWindowRect(self.handle, &mut old_rect);
+            let mut point = POINT {
+                x: old_rect.top,
+                y: old_rect.left,
+            };
+            ScreenToClient(GetParent(self.handle), &mut point);
+            safe_api::user32::set_window_pos(
+                self.handle,
+                null_mut(),
+                point.x,
+                point.y,
+                width as i32,
+                height as i32,
+                SWP_NOZORDER,
+            );
+        }
     }
 }
 

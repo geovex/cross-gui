@@ -39,15 +39,8 @@ impl Widget for Label {
             self.box_.hide();
         }
     }
-    fn move_(&mut self, x: isize, y: isize, w: isize, h: isize) {
-        self.box_.set_size_request(w as i32, h as i32);
-        let parent = self.box_.get_parent();
-        if let Some(parent) = parent {
-            let parent = parent.dynamic_cast::<gtk::Fixed>();
-            if let Ok(fixed_layout) = parent {
-                fixed_layout.move_(&self.box_, x as i32, y as i32);
-            }
-        }
+    fn resize(&mut self, width: isize, height: isize) {
+        self.box_.set_size_request(width as i32, height as i32);
     }
     
 }

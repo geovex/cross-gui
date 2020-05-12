@@ -13,12 +13,12 @@ fn main() {
     let mut button = g.new_button();
     button.set_title("button");
     essential_window.add_widget(button.upcast());
-    button.move_(110, 10, 80, 40);
+    essential_window.move_child(&*button.upcast(), 110, 10, 80, 40);
     let mut g_clone = g.cloned();
     button.set_on_clicked(Box::new(move || g_clone.post_quit_message()));
     let mut label = g.new_label();
     essential_window.add_widget(label.upcast());
     label.set_title("label");
-    label.move_(10, 10, 90, 40);
+    essential_window.move_child(&*label.upcast(), 10, 10, 90, 40);
     g.event_loop();
 }

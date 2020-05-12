@@ -17,19 +17,19 @@ pub fn gui_trait(_attrs: TokenStream, input: TokenStream) -> TokenStream {
 
 #[proc_macro_attribute]
 pub fn auto_clone(_attrs: TokenStream, input: TokenStream) -> TokenStream {
-    let mut input = parse_macro_input!(input as syn::ItemImpl);
-    let impl_target = input.trait_.clone();
+    let mut i = parse_macro_input!(input as syn::ItemImpl);
+    let impl_target = i.trait_.clone();
     if impl_target.is_none() {
         return TokenStream::from(
-            syn::Error::new(input.span(), "impl must imlement some type").to_compile_error(),
+            syn::Error::new(i.span(), "impl must imlement some type").to_compile_error(),
         );
     }
     let impl_target = impl_target.unwrap().1;
-    input.items.push(syn::parse_quote! {
+    i.items.push(syn::parse_quote! {
         fn cloned(&mut self) -> Box<dyn #impl_target> {
             Box::new(self.clone())
         }
     });
-    let t = TokenStream::from(quote::quote!(#input));
+    let t = TokenStream::from(quote::quote!(#i));
     t
 }
